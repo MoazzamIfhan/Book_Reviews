@@ -1,38 +1,39 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  AutoIncrement,
+  PrimaryKey,
+} from 'sequelize-typescript';
 
 @Table({
   timestamps: true, // Adds createdAt and updatedAt timestamps
-  paranoid: true,   // Enables soft deletes by adding a deletedAt timestamp
+  paranoid: true, // Enables soft deletes by adding a deletedAt timestamp
 })
 export class Users extends Model<Users> {
+  @AutoIncrement
+  @PrimaryKey
   @Column({
-    type: DataType.UUID,
-    allowNull: false,
-    primaryKey: true,
+    type: DataType.INTEGER,
   })
-  id: string;
+  id?: number;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+  username: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  author: string;
+  password: string;
 
   @Column({
-    type: DataType.DATE,
+    type: DataType.STRING,
     allowNull: false,
   })
-  publicationDate: Date;
-
-  @Column({
-    type: DataType.BLOB,
-    allowNull: true,
-  })
-  bookCover: any;
+  role: string;
 }

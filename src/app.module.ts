@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '123456789',
+      password: 'Root@123',
       database: 'book_review',
       models: [], // Add your models here, e.g., [User, Book]
       autoLoadModels: true, // Automatically load models to the database

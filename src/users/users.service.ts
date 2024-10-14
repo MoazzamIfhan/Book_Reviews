@@ -1,23 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { Users } from './users.model';
+import { InjectModel } from '@nestjs/sequelize';
+import * as bcrypt from 'bcrypt';
 
-export type User = any;  // Define a more specific type or interface based on your data schema
+export type User = any; // Define a more specific type or interface based on your data schema
 
 @Injectable()
 export class UsersService {
-    private readonly users = [
-        {
-            userId: 1,
-            username: 'john',
-            password: '$2b$10$E/wJZl5tbnNIl.P9aCTEZO/uQ.4hIZAYY/jSX7LEcICsc9grR3qqu',  // This should be a bcrypt hash
-        },
-        {
-            userId: 2,
-            username: 'jane',
-            password: '$2b$10$kkksl5tbnNIl.P9aCTEZO/uhN/hIzKAYY/jSL7LEcICsc9grR3qqu',
-        },
-    ];
+  constructor(
+    @InjectModel(Users)
+    private userModel: typeof Users,
+  ) {}
 
-    async findOne(username: string): Promise<User | undefined> {
-        return this.users.find(user => user.username === username);
-    }
+  async createUser(
+    username: string,
+    password: string,
+    role: string,
+  ): Promise<Users> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    return this.userModel.create({
+      username,
+      password: hashedPassword,
+      role,
+    });
+  }
+
+  // async findOne(username: string): Promise<User | undefined> {
+  //   return this.users.find((user) => user.username === username);
+  // }
 }
