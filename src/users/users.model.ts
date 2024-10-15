@@ -5,7 +5,9 @@ import {
   DataType,
   AutoIncrement,
   PrimaryKey,
+  HasMany,
 } from 'sequelize-typescript';
+import { Reviews } from '../reviews/reviews.model';
 
 @Table({
   timestamps: true, // Adds createdAt and updatedAt timestamps
@@ -36,4 +38,7 @@ export class Users extends Model<Users> {
     allowNull: false,
   })
   role: string;
+
+  @HasMany(() => Reviews, { foreignKey: 'userId', as: 'Reviews' })
+  Reviews!: number;
 }

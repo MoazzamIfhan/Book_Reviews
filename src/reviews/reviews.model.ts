@@ -5,13 +5,15 @@ import {
   DataType,
   AutoIncrement,
   PrimaryKey,
+  BelongsTo,
 } from 'sequelize-typescript';
+import { Users } from '../users/users.model';
 
 @Table({
   timestamps: true, // Adds createdAt and updatedAt timestamps
   paranoid: true, // Enables soft deletes by adding a deletedAt timestamp
 })
-export class Book extends Model<Book> {
+export class Reviews extends Model<Reviews> {
   @AutoIncrement
   @PrimaryKey
   @Column({
@@ -20,26 +22,19 @@ export class Book extends Model<Book> {
   id?: number;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.INTEGER,
     allowNull: false,
+    validate: { len: [0, 5] },
   })
-  title: string;
+  rating: number;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    validate: { len: [0, 500] },
   })
-  author: string;
+  review_text: string;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  publicationDate: String;
-
-  @Column({
-    type: DataType.BLOB,
-    allowNull: true,
-  })
-  bookCover: any;
+  @BelongsTo(() => Users, { foreignKey: 'userId', as: 'users' })
+  userId: number;
 }

@@ -11,20 +11,21 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    // const user = await this.usersService.findOne(username);
-    // if (user && bcrypt.compareSync(pass, user.password)) {
-    //   const { password, ...result } = user;
-    //   return result;
-    // }
+    const user = await this.usersService.findUserByEmail(username);
+    if (user && bcrypt.compareSync(pass, user.password)) {
+      const { password, ...result } = user;
+      return result;
+    }
     return null;
   }
 
-  async login(user: any) {
-    const payload = {
-      username: user.username,
-      sub: user.id,
-      roles: user.roles,
-    };
+  async login(email: string, password: string) {
+    const user = await this.validateUser(email, password);
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
+
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
